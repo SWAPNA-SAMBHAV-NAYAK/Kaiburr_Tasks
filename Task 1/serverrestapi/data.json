@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Tony Stark",
+
+    "language": "java",
+    "framework": "django"
+  },
+  {
+    "name": "Steve Rogers",
+
+    "language": "HTML & CSS",
+    "framework": "reactjs"
+  },
+  {
+    "name": "Stephen Strange",
+
+    "language": "javascript",
+    "framework": "nextjs"
+  }
+]
