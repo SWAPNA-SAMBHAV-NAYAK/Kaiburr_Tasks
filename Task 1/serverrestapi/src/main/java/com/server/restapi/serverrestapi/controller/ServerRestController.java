@@ -7,18 +7,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.List;
+import com.server.restapi.serverrestapi.data.ServerData;
+import java.io.File;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.io.ClassPathResource;
+import com.fasterxml.jackson.databind.ObjectWriter;
 @RestController
 @RequestMapping("/servers")
+@CrossOrigin(origins = "http://localhost:3000/")
 public class ServerRestController {
 
     @Autowired
     private ServerService serverService;
 
-    @GetMapping(value = "/")
-    public List<ServerDTO> getAllServers() {
-        return ObjectMapperUtils.mapAll(serverService.findAll(), ServerDTO.class);
-    }
+//    @GetMapping(value = "/")
+//    public List<ServerDTO> getAllServers() {
+//        return ObjectMapperUtils.mapAll(serverService.findAll(), ServerDTO.class);
+//    }
+        @GetMapping(value = "/")
+        public List<ServerDTO> getAllServers() throws IOException {
+            List<ServerDTO> servers = ObjectMapperUtils.mapAll(serverService.findAll(), ServerDTO.class);
+
+            // Create a ServerData object and set its servers list
+            ServerData serverData = new ServerData();
+            serverData.setServers(servers);
+
+            // Write the serverData object to a JSON file
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                File file = new ClassPathResource("data.json").getFile();
+                mapper.writeValue(file, serverData);
+            }catch(IOException e){}
+            return servers;
+        }
     @GetMapping(value = "/byServerId/{serverId}")
     public ServerDTO getServerByServerId(@PathVariable("serverId") String serverId) {
         return ObjectMapperUtils.map(serverService.findByServerId(serverId), ServerDTO.class);
